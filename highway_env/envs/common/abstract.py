@@ -277,7 +277,7 @@ class AbstractEnv(gym.Env):
             if (
                 frame < frames - 1
             ):  # Last frame will be rendered through env.render() as usual
-                self._automatic_rendering()
+                self.render()
 
         self.enable_auto_render = False
 
@@ -326,19 +326,6 @@ class AbstractEnv(gym.Env):
         self._record_video_wrapper = wrapper
         self.update_metadata()
         self._record_video_wrapper.frames_per_sec = self.metadata["render_fps"]
-
-    def _automatic_rendering(self) -> None:
-        """
-        Automatically render the intermediate frames while an action is still ongoing.
-
-        This allows to render the whole video and not only single steps corresponding to agent decision-making.
-        If a RecordVideo wrapper has been set, use it to capture intermediate frames.
-        """
-        if self.viewer is not None and self.enable_auto_render:
-            if self._record_video_wrapper:
-                self._record_video_wrapper._capture_frame()
-            else:
-                self.render()
 
     def simplify(self) -> AbstractEnv:
         """
